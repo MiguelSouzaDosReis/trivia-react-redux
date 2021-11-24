@@ -7,10 +7,18 @@ class Login extends Component {
       name: '',
       email: '',
     };
+
+    this.handleClick = this.handleClick.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   handleClick(e) {
     e.preventDefault(e);
+  }
+
+  handleInputChange(event) {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   }
 
   render() {
@@ -24,6 +32,7 @@ class Login extends Component {
             id="name"
             type="text"
             value={ name }
+            onChange={ this.handleInputChange }
             data-testid="input-player-name"
           />
         </label>
@@ -34,6 +43,7 @@ class Login extends Component {
             id="email"
             type="email"
             value={ email }
+            onChange={ this.handleInputChange }
             data-testid="input-gravatar-email"
           />
         </label>
@@ -41,7 +51,7 @@ class Login extends Component {
           type="submit"
           data-testid="btn-play"
           onClick={ (e) => this.handleClick(e) }
-          disabled={ name === '' && email === '' }
+          disabled={ name === '' || email === '' }
         >
           Jogar
         </button>
