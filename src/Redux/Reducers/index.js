@@ -1,5 +1,7 @@
 // import { LOGIN } from '../Actions';
 
+import { SAVE_TOKEN } from '../Actions';
+
 const INITIAL_STATE = {
   player: {
     name: '',
@@ -8,7 +10,7 @@ const INITIAL_STATE = {
     gravatarEmail: '',
   },
   ranking: [],
-  tokem: '',
+  token: '',
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -22,6 +24,11 @@ const reducer = (state = INITIAL_STATE, action) => {
   //       gravatarEmail: action.payload.email,
   //     },
   //   };
+  case SAVE_TOKEN:
+    return {
+      ...state,
+      token: action.payload,
+    };
   default:
     return state;
   }
