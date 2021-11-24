@@ -10,6 +10,12 @@ class Login extends Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleClickConfig = this.handleClickConfig.bind(this);
+  }
+
+  handleClickConfig() {
+    const { history } = this.props;
+    history.push('/settings');
   }
 
   handleClick(e) {
@@ -54,6 +60,14 @@ class Login extends Component {
           disabled={ name === '' || email === '' }
         >
           Jogar
+        </button>
+        <button
+          type="button"
+          data-testid="btn-settings"
+          onClick={ this.handleClickConfig }
+        >
+          Configurações
+
         </button>
       </div>
     );
