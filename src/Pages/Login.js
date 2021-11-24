@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { saveTokenAct } from '../Redux/Actions';
 
 class Login extends Component {
@@ -20,7 +19,7 @@ class Login extends Component {
 
   handleClickConfig() {
     const { history } = this.props;
-    history.push('/settings');    
+    history.push('/settings');
   }
 
   fetchToken() {
@@ -96,7 +95,7 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
-  saveToken: PropTypes.func.isRequired,  
+  saveToken: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
