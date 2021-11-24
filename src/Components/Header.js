@@ -14,9 +14,10 @@ class Header extends Component {
             src={ `${url}` }
             alt="profile"
           />
-          <h1 data-testid="header-player-name">
+          <h3 data-testid="header-player-name">
+            {'Jogador: '}
             { name }
-          </h1>
+          </h3>
           <p data-testid="header-score">{ score }</p>
         </header>
       </div>
@@ -31,7 +32,7 @@ const mapStateToProp = (state) => ({
 
 Header.propTypes = {
   name: PropTypes.string.isRequired,
-  score: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProp)(Header);
