@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router';
 
 class Login extends Component {
   constructor() {
@@ -6,6 +7,7 @@ class Login extends Component {
     this.state = {
       name: '',
       email: '',
+      redirect: false,
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -14,6 +16,7 @@ class Login extends Component {
 
   handleClick(e) {
     e.preventDefault(e);
+    this.setState({ redirect: true });
   }
 
   handleInputChange(event) {
@@ -22,9 +25,10 @@ class Login extends Component {
   }
 
   render() {
-    const { name, email } = this.state;
+    const { name, email, redirect } = this.state;
     return (
       <div>
+        {redirect && <Redirect to="Header" />}
         <label htmlFor="name">
           Nome:
           <input
