@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { saveTokenAct } from '../Redux/Actions';
 
 class Login extends Component {
   constructor() {
@@ -10,10 +13,24 @@ class Login extends Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.fetchToken = this.fetchToken.bind(this);
+  }
+
+  fetchToken() {
+    const { saveToken } = this.props;
+    return fetch('https://opentdb.com/api_token.php?command=request')
+      .then((res) => res.json()
+        .then((json) => {
+          saveToken(json.token);
+          localStorage.setItem('token', json.token);
+        }));
   }
 
   handleClick(e) {
+    // const { history } = this.props;
     e.preventDefault(e);
+    this.fetchToken();
+    // history.push('páginaInicial');
   }
 
   handleInputChange(event) {
@@ -60,4 +77,15 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  saveToken: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  saveToken: (token) => dispatch(saveTokenAct(token)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
