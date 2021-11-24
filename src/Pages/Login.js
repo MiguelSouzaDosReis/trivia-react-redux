@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { saveTokenAct } from '../Redux/Actions';
+import { loginAct, saveTokenAct } from '../Redux/Actions';
 
 class Login extends Component {
   constructor() {
@@ -10,7 +9,6 @@ class Login extends Component {
     this.state = {
       name: '',
       email: '',
-      redirect: false,
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -35,11 +33,12 @@ class Login extends Component {
   }
 
   handleClick(e) {
-    // const { history } = this.props;
+    const { history, login } = this.props;
+    const { name, email } = this.state;
     e.preventDefault(e);
-    this.setState({ redirect: true });
     this.fetchToken();
-    // history.push('páginaInicial');
+    login(name, email);
+    history.push('/Header');
   }
 
   handleInputChange(event) {
@@ -48,10 +47,9 @@ class Login extends Component {
   }
 
   render() {
-    const { name, email, redirect } = this.state;
+    const { name, email } = this.state;
     return (
       <div>
-        {redirect && <Redirect to="Header" />}
         <label htmlFor="name">
           Nome:
           <input
@@ -100,10 +98,12 @@ Login.propTypes = {
     push: PropTypes.func,
   }).isRequired,
   saveToken: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   saveToken: (token) => dispatch(saveTokenAct(token)),
+  login: (name, email) => dispatch(loginAct(name, email)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
