@@ -32,7 +32,7 @@ const reducer = (state = INITIAL_STATE, action) => {
   case GET_QUESTIONS:
     return {
       ...state,
-      questions: [...state.questions, ...action.payload.questions],
+      questions: [...state.questions, ...action.payload.questions.results],
     };
 
   default:

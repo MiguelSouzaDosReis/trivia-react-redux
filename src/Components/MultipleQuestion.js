@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class MultipleQuestion extends Component {
   constructor(props) {
@@ -19,6 +19,7 @@ class MultipleQuestion extends Component {
 
     this.getTestidIndex = this.getTestidIndex.bind(this);
     this.getAnswersButtons = this.getAnswersButtons.bind(this);
+    this.handleButtonClick = this.handleButtonClick.bind(this);
   }
 
   getTestidIndex() {
@@ -34,6 +35,7 @@ class MultipleQuestion extends Component {
       <button
         key={ index }
         type="button"
+        onClick={ this.handleButtonClick }
         data-testid={ answer === correctAnswer
           ? 'correct-answer'
           : this.getTestidIndex() }
@@ -41,6 +43,11 @@ class MultipleQuestion extends Component {
         { answer }
       </button>
     ));
+  }
+
+  handleButtonClick() {
+    const { answered } = this.props;
+    answered();
   }
 
   render() {
@@ -56,5 +63,15 @@ class MultipleQuestion extends Component {
     );
   }
 }
+
+MultipleQuestion.propTypes = {
+  currentQuestion: PropTypes.shape({
+    correct_answer: PropTypes.string,
+    incorrect_answers: PropTypes.arrayOf(PropTypes.string),
+    category: PropTypes.string,
+    question: PropTypes.string,
+  }).isRequired,
+  answered: PropTypes.func.isRequired,
+};
 
 export default MultipleQuestion;
