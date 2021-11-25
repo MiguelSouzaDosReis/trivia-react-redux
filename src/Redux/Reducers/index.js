@@ -1,4 +1,4 @@
-import { LOGIN, SAVE_TOKEN } from '../Actions';
+import { GET_QUESTIONS, LOGIN, SAVE_TOKEN } from '../Actions';
 
 const INITIAL_STATE = {
   player: {
@@ -7,6 +7,7 @@ const INITIAL_STATE = {
     score: 0,
     gravatarEmail: '',
   },
+  questions: [],
   ranking: [],
   token: '',
 };
@@ -27,6 +28,13 @@ const reducer = (state = INITIAL_STATE, action) => {
       ...state,
       token: action.payload,
     };
+
+  case GET_QUESTIONS:
+    return {
+      ...state,
+      questions: [...state.questions, ...action.payload.questions],
+    };
+
   default:
     return state;
   }
