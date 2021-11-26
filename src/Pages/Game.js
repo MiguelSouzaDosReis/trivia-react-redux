@@ -78,13 +78,14 @@ class Game extends Component {
 
   renderQuestions() {
     const { questions } = this.props;
-    const { questionIndex, timerValue } = this.state;
+    const { questionIndex, timerValue, isAnswered } = this.state;
     if (questions[questionIndex].type === 'multiple') {
       return (<MultipleQuestion
         currentQuestion={ questions[questionIndex] }
         answered={ this.showNextButton }
         stopTimer={ this.stopTimer }
         timerValue={ timerValue }
+        isAnswered={ isAnswered }
       />);
     }
     return (<BooleanQuestion
@@ -92,6 +93,7 @@ class Game extends Component {
       answered={ this.showNextButton }
       stopTimer={ this.stopTimer }
       timerValue={ timerValue }
+      isAnswered={ isAnswered }
     />);
   }
 
