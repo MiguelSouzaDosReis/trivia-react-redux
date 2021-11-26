@@ -38,7 +38,7 @@ class Login extends Component {
     e.preventDefault(e);
     this.fetchToken();
     login(name, email);
-    history.push('/Header');
+    history.push('/game');
   }
 
   handleInputChange(event) {
