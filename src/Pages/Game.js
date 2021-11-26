@@ -13,21 +13,27 @@ class Game extends Component {
     this.state = {
       questionIndex: 0,
       isAnswered: false,
+      timerValue: 30,
     };
 
     this.handleNextClick = this.handleNextClick.bind(this);
     this.renderQuestions = this.renderQuestions.bind(this);
     this.updateQuestions = this.updateQuestions.bind(this);
     this.showNextButton = this.showNextButton.bind(this);
+    this.startTimer = this.startTimer.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
   }
 
   componentDidMount() {
     const { getQuestions, token } = this.props;
     getQuestions(token);
+    this.startTimer();
   }
 
   componentDidUpdate() {
+    const { timerValue } = this.state;
     this.updateQuestions();
+    if (timerValue === 0) this.stopTimer();
   }
 
   updateQuestions() {
@@ -53,39 +59,55 @@ class Game extends Component {
     }
     document.querySelector('[data-testid=correct-answer]').classList.remove('correct');
     document.querySelector('[data-testid=wrong-answer-0]').classList.remove('incorrect');
+    this.setState({ timerValue: 30 }, this.startTimer());
   }
 
   showNextButton() {
     this.setState({ isAnswered: true });
   }
 
+  startTimer() {
+    const ONE_SECOND = 1000;
+    this.Interval = setInterval(() => this
+      .setState((previous) => ({ timerValue: previous.timerValue - 1 })), ONE_SECOND);
+  }
+
+  stopTimer() {
+    clearInterval(this.Interval);
+  }
+
   renderQuestions() {
     const { questions } = this.props;
-    const { questionIndex } = this.state;
+    const { questionIndex, timerValue } = this.state;
     if (questions[questionIndex].type === 'multiple') {
       return (<MultipleQuestion
         currentQuestion={ questions[questionIndex] }
         answered={ this.showNextButton }
+        stopTimer={ this.stopTimer }
+        timerValue={ timerValue }
       />);
     }
     return (<BooleanQuestion
       currentQuestion={ questions[questionIndex] }
       answered={ this.showNextButton }
+      stopTimer={ this.stopTimer }
+      timerValue={ timerValue }
     />);
   }
 
   render() {
     const { questions } = this.props;
-    const { isAnswered } = this.state;
+    const { timerValue, isAnswered } = this.state;
     return (
       <div>
         <Header />
+        <span><strong>{timerValue}</strong></span>
         {questions.length > 0 && this.renderQuestions() }
         <button
           data-testid="btn-next"
           type="button"
           onClick={ this.handleNextClick }
-          hidden={ !isAnswered }
+          hidden={ !(isAnswered || timerValue === 0) }
         >
           Next
         </button>
