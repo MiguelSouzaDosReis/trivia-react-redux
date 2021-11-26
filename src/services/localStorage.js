@@ -1,5 +1,11 @@
+const defaultPlayerRanking = { name: '', score: 0, picture: '' };
+
+export function getPlayer() {
+  return JSON.parse(localStorage.getItem('state'));
+}
+
 export function savePlayerInfo(info) {
-  const state = JSON.parse(localStorage.getItem('state'));
+  const state = getPlayer();
   let newState;
   if (state === null || state === undefined) {
     newState = {
@@ -15,12 +21,24 @@ export function savePlayerInfo(info) {
       },
     };
   }
-  console.log(newState);
   localStorage.setItem('state', JSON.stringify(newState));
 }
 
-export function getPlayer() {
-  return JSON.parse(localStorage.getItem('state'));
+export function getRanking() {
+  return JSON.parse(localStorage.getItem('ranking'));
+}
+
+export function addRanking(playerRanking = defaultPlayerRanking) {
+  const ranking = getRanking();
+  let newRanking;
+
+  if (ranking === null || ranking === undefined) {
+    newRanking = [playerRanking];
+  } else {
+    newRanking = [...ranking, playerRanking];
+  }
+
+  localStorage.setItem('ranking', JSON.stringify(newRanking));
 }
 
 export function saveToken(token) {
