@@ -40,14 +40,3 @@ export function addRanking(playerRanking = defaultPlayerRanking) {
 
   localStorage.setItem('ranking', JSON.stringify(newRanking));
 }
-
-export function saveToken(token) {
-  localStorage.setItem('token', token);
-}
-
-export function getToken() {
-  if (localStorage.getItem('token') !== null) {
-    console.log(localStorage.getItem('token'));
-    return (localStorage.getItem('token'));
-  }
-}
