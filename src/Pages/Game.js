@@ -39,6 +39,20 @@ class Game extends Component {
   handleNextClick() {
     this.setState((previous) => ({ questionIndex: previous.questionIndex + 1,
       isAnswered: false }));
+    const { questions } = this.props;
+    const { questionIndex } = this.state;
+    if (questions[questionIndex].type === 'multiple') {
+      document.querySelector('[data-testid=correct-answer]').classList
+        .remove('correct');
+      document.querySelector('[data-testid=wrong-answer-0]').classList
+        .remove('incorrect');
+      document.querySelector('[data-testid=wrong-answer-1]').classList
+        .remove('incorrect');
+      document.querySelector('[data-testid=wrong-answer-2]').classList
+        .remove('incorrect');
+    }
+    document.querySelector('[data-testid=correct-answer]').classList.remove('correct');
+    document.querySelector('[data-testid=wrong-answer-0]').classList.remove('incorrect');
   }
 
   showNextButton() {
