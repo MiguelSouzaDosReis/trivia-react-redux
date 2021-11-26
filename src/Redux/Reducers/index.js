@@ -28,13 +28,11 @@ const reducer = (state = INITIAL_STATE, action) => {
       ...state,
       token: action.payload,
     };
-
   case GET_QUESTIONS:
     return {
       ...state,
       questions: [...state.questions, ...action.payload.questions.results],
     };
-
   default:
     return state;
   }

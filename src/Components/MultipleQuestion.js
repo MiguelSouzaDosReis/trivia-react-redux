@@ -30,7 +30,7 @@ class MultipleQuestion extends Component {
   getAnswersButtons() {
     this.createSortedArray();
     const { sortedArray } = this.state;
-    const { currentQuestion } = this.props;
+    const { currentQuestion, timerValue } = this.props;
     const {
       correct_answer: correctAnswer,
     } = currentQuestion;
@@ -47,6 +47,7 @@ class MultipleQuestion extends Component {
           : this.getTestidIndex() }
         dangerouslySetInnerHTML={ this.sanitize(answer) }
         htmlFor="a"
+        disabled={ timerValue === 0 }
       />
     ));
   }
@@ -68,7 +69,8 @@ class MultipleQuestion extends Component {
   }
 
   handleButtonClick() {
-    const { answered } = this.props;
+    const { answered, stopTimer } = this.props;
+    stopTimer();
     document.querySelector('[data-testid=correct-answer]').classList.add('correct');
     document.querySelector('[data-testid=wrong-answer-0]').classList.add('incorrect');
     document.querySelector('[data-testid=wrong-answer-1]').classList.add('incorrect');
@@ -116,6 +118,8 @@ MultipleQuestion.propTypes = {
     question: PropTypes.string,
   }).isRequired,
   answered: PropTypes.func.isRequired,
+  stopTimer: PropTypes.func.isRequired,
+  timerValue: PropTypes.number.isRequired,
 };
 
 export default MultipleQuestion;

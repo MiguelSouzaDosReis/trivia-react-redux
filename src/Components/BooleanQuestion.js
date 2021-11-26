@@ -11,7 +11,8 @@ class BooleanQuestion extends Component {
   }
 
   handleButtonClick() {
-    const { answered } = this.props;
+    const { answered, stopTimer } = this.props;
+    stopTimer();
     document.querySelector('[data-testid=correct-answer]').classList.add('correct');
     document.querySelector('[data-testid=wrong-answer-0]').classList.add('incorrect');
     answered();
@@ -31,7 +32,7 @@ class BooleanQuestion extends Component {
   }
 
   render() {
-    const { currentQuestion } = this.props;
+    const { currentQuestion, timerValue } = this.props;
     const { correct_answer: correctAnswer,
       category, question } = currentQuestion;
     return (
@@ -48,6 +49,7 @@ class BooleanQuestion extends Component {
           type="button"
           data-testid={ correctAnswer === 'True' ? 'correct-answer' : 'wrong-answer-0' }
           onClick={ this.handleButtonClick }
+          disabled={ timerValue === 0 }
         >
           True
         </button>
@@ -55,6 +57,7 @@ class BooleanQuestion extends Component {
           type="button"
           data-testid={ correctAnswer === 'False' ? 'correct-answer' : 'wrong-answer-0' }
           onClick={ this.handleButtonClick }
+          disabled={ timerValue === 0 }
         >
           False
         </button>
@@ -70,6 +73,8 @@ BooleanQuestion.propTypes = {
     correct_answer: PropTypes.string,
   }).isRequired,
   answered: PropTypes.func.isRequired,
+  stopTimer: PropTypes.func.isRequired,
+  timerValue: PropTypes.number.isRequired,
 };
 
 export default BooleanQuestion;
