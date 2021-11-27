@@ -9,34 +9,22 @@ class BooleanQuestion extends Component {
     super(props);
 
     this.handleButtonClick = this.handleButtonClick.bind(this);
-    this.getQuestionValue = this.getQuestionValue.bind(this);
-  }
-
-  getQuestionValue() {
-    const { currentQuestion: { difficulty }, timerValue } = this.props;
-    const pointBase = 10;
-    const difficultyWeight = {
-      easy: 1,
-      medium: 2,
-      hard: 3,
-    };
-    const questionValue = pointBase + (timerValue * difficultyWeight[difficulty]);
-    return questionValue;
   }
 
   handleButtonClick(e) {
-    const { answered, stopTimer } = this.props;
+    const { answered, calculateScore, stopTimer } = this.props;
     stopTimer();
     document.querySelector('[data-testid=correct-answer]').classList.add('correct');
     document.querySelector('[data-testid=wrong-answer-0]').classList.add('incorrect');
+
     const isCorrect = e.target.className === 'correct';
     if (isCorrect) {
-      const currentScore = getPlayer().score;
-      savePlayerInfo({ score: currentScore + this.getQuestionValue() });
-      console.log(getPlayer());
-      console.log(currentScore);
-      console.log(this.getQuestionValue());
+      const currentScore = getPlayer().player.score;
+      const questionScore = calculateScore();
+
+      savePlayerInfo({ score: currentScore + questionScore });
     }
+
     answered();
   }
 
@@ -97,6 +85,7 @@ BooleanQuestion.propTypes = {
   }).isRequired,
   answered: PropTypes.func.isRequired,
   stopTimer: PropTypes.func.isRequired,
+  calculateScore: PropTypes.func.isRequired,
   timerValue: PropTypes.number.isRequired,
   isAnswered: PropTypes.bool.isRequired,
 };
