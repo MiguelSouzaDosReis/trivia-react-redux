@@ -18,7 +18,6 @@ class Game extends Component {
 
     this.handleNextClick = this.handleNextClick.bind(this);
     this.renderQuestions = this.renderQuestions.bind(this);
-    this.updateQuestions = this.updateQuestions.bind(this);
     this.showNextButton = this.showNextButton.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
@@ -33,14 +32,7 @@ class Game extends Component {
 
   componentDidUpdate() {
     const { timerValue } = this.state;
-    this.updateQuestions();
     if (timerValue === 0) this.stopTimer();
-  }
-
-  updateQuestions() {
-    const { questions, getQuestions, token } = this.props;
-    const { questionIndex } = this.state;
-    if (questionIndex === (questions.length - 2)) getQuestions(token);
   }
 
   calculateScore() {
@@ -56,10 +48,17 @@ class Game extends Component {
   }
 
   handleNextClick() {
+    const { questionIndex } = this.state;
+    const { questions, history } = this.props;
+    const lastIndex = 4;
+
+    if (questionIndex === lastIndex) {
+      history.push('/feedback');
+      return;
+    }
+
     this.setState((previous) => ({ questionIndex: previous.questionIndex + 1,
       isAnswered: false }));
-    const { questions } = this.props;
-    const { questionIndex } = this.state;
     if (questions[questionIndex].type === 'multiple') {
       document.querySelector('[data-testid=correct-answer]').classList
         .remove('correct');
@@ -153,6 +152,9 @@ Game.propTypes = {
     length: PropTypes.number,
     type: PropTypes.string,
   })).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   getQuestions: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
 };
