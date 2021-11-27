@@ -22,6 +22,7 @@ class Game extends Component {
     this.showNextButton = this.showNextButton.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
+    this.calculateScore = this.calculateScore.bind(this);
   }
 
   componentDidMount() {
@@ -40,6 +41,18 @@ class Game extends Component {
     const { questions, getQuestions, token } = this.props;
     const { questionIndex } = this.state;
     if (questionIndex === (questions.length - 2)) getQuestions(token);
+  }
+
+  calculateScore() {
+    const { questions } = this.props;
+    const { questionIndex, timerValue } = this.state;
+    const { difficulty } = questions[questionIndex];
+    const basePoint = 10;
+    const difficultyWeight = { easy: 1, medium: 2, hard: 3 };
+
+    const score = basePoint + (timerValue * difficultyWeight[difficulty]);
+
+    return score;
   }
 
   handleNextClick() {
@@ -86,6 +99,7 @@ class Game extends Component {
         stopTimer={ this.stopTimer }
         timerValue={ timerValue }
         isAnswered={ isAnswered }
+        calculateScore={ this.calculateScore }
       />);
     }
     return (<BooleanQuestion
@@ -94,6 +108,7 @@ class Game extends Component {
       stopTimer={ this.stopTimer }
       timerValue={ timerValue }
       isAnswered={ isAnswered }
+      calculateScore={ this.calculateScore }
     />);
   }
 
@@ -131,6 +146,7 @@ Game.propTypes = {
   questions: PropTypes.arrayOf(PropTypes.shape({
     correct_answer: PropTypes.string,
     incorrect_answers: PropTypes.arrayOf(PropTypes.string),
+    difficulty: PropTypes.string,
     category: PropTypes.string,
     question: PropTypes.string,
     map: PropTypes.func,
