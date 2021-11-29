@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import sanitizeHtml from 'sanitize-html';
+import { getPlayer, savePlayerInfo } from '../services/localStorage';
 
 class MultipleQuestion extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class MultipleQuestion extends Component {
   getAnswersButtons() {
     this.createSortedArray();
     const { sortedArray } = this.state;
-    const { currentQuestion, timerValue } = this.props;
+    const { currentQuestion, timerValue, isAnswered } = this.props;
     const {
       correct_answer: correctAnswer,
     } = currentQuestion;
@@ -46,8 +47,7 @@ class MultipleQuestion extends Component {
           ? 'correct-answer'
           : this.getTestidIndex() }
         dangerouslySetInnerHTML={ this.sanitize(answer) }
-        htmlFor="a"
-        disabled={ timerValue === 0 }
+        disabled={ timerValue === 0 || isAnswered }
       />
     ));
   }
@@ -68,13 +68,22 @@ class MultipleQuestion extends Component {
     }
   }
 
-  handleButtonClick() {
-    const { answered, stopTimer } = this.props;
+  handleButtonClick(e) {
+    const { answered, calculateScore, stopTimer } = this.props;
     stopTimer();
     document.querySelector('[data-testid=correct-answer]').classList.add('correct');
     document.querySelector('[data-testid=wrong-answer-0]').classList.add('incorrect');
     document.querySelector('[data-testid=wrong-answer-1]').classList.add('incorrect');
     document.querySelector('[data-testid=wrong-answer-2]').classList.add('incorrect');
+
+    const isCorrect = e.target.className === 'correct';
+    if (isCorrect) {
+      const currentScore = getPlayer().player.score;
+      const questionScore = calculateScore();
+
+      savePlayerInfo({ score: currentScore + questionScore });
+    }
+
     answered();
   }
 
@@ -118,8 +127,10 @@ MultipleQuestion.propTypes = {
     question: PropTypes.string,
   }).isRequired,
   answered: PropTypes.func.isRequired,
+  calculateScore: PropTypes.func.isRequired,
   stopTimer: PropTypes.func.isRequired,
   timerValue: PropTypes.number.isRequired,
+  isAnswered: PropTypes.bool.isRequired,
 };
 
 export default MultipleQuestion;

@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import sanitizeHtml from 'sanitize-html';
+import { getPlayer, savePlayerInfo } from '../services/localStorage';
 
 class BooleanQuestion extends Component {
   constructor(props) {
@@ -10,11 +11,20 @@ class BooleanQuestion extends Component {
     this.handleButtonClick = this.handleButtonClick.bind(this);
   }
 
-  handleButtonClick() {
-    const { answered, stopTimer } = this.props;
+  handleButtonClick(e) {
+    const { answered, calculateScore, stopTimer } = this.props;
     stopTimer();
     document.querySelector('[data-testid=correct-answer]').classList.add('correct');
     document.querySelector('[data-testid=wrong-answer-0]').classList.add('incorrect');
+
+    const isCorrect = e.target.className === 'correct';
+    if (isCorrect) {
+      const currentScore = getPlayer().player.score;
+      const questionScore = calculateScore();
+
+      savePlayerInfo({ score: currentScore + questionScore });
+    }
+
     answered();
   }
 
@@ -32,7 +42,7 @@ class BooleanQuestion extends Component {
   }
 
   render() {
-    const { currentQuestion, timerValue } = this.props;
+    const { currentQuestion, timerValue, isAnswered } = this.props;
     const { correct_answer: correctAnswer,
       category, question } = currentQuestion;
     return (
@@ -49,7 +59,7 @@ class BooleanQuestion extends Component {
           type="button"
           data-testid={ correctAnswer === 'True' ? 'correct-answer' : 'wrong-answer-0' }
           onClick={ this.handleButtonClick }
-          disabled={ timerValue === 0 }
+          disabled={ timerValue === 0 || isAnswered }
         >
           True
         </button>
@@ -57,7 +67,7 @@ class BooleanQuestion extends Component {
           type="button"
           data-testid={ correctAnswer === 'False' ? 'correct-answer' : 'wrong-answer-0' }
           onClick={ this.handleButtonClick }
-          disabled={ timerValue === 0 }
+          disabled={ timerValue === 0 || isAnswered }
         >
           False
         </button>
@@ -71,10 +81,13 @@ BooleanQuestion.propTypes = {
     question: PropTypes.string,
     category: PropTypes.string,
     correct_answer: PropTypes.string,
+    difficulty: PropTypes.string,
   }).isRequired,
   answered: PropTypes.func.isRequired,
   stopTimer: PropTypes.func.isRequired,
+  calculateScore: PropTypes.func.isRequired,
   timerValue: PropTypes.number.isRequired,
+  isAnswered: PropTypes.bool.isRequired,
 };
 
 export default BooleanQuestion;

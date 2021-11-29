@@ -18,10 +18,10 @@ class Game extends Component {
 
     this.handleNextClick = this.handleNextClick.bind(this);
     this.renderQuestions = this.renderQuestions.bind(this);
-    this.updateQuestions = this.updateQuestions.bind(this);
     this.showNextButton = this.showNextButton.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
+    this.calculateScore = this.calculateScore.bind(this);
     this.handleClickFeedbacks = this.handleClickFeedbacks.bind(this);
   }
 
@@ -33,21 +33,33 @@ class Game extends Component {
 
   componentDidUpdate() {
     const { timerValue } = this.state;
-    this.updateQuestions();
     if (timerValue === 0) this.stopTimer();
   }
 
-  updateQuestions() {
-    const { questions, getQuestions, token } = this.props;
-    const { questionIndex } = this.state;
-    if (questionIndex === (questions.length - 2)) getQuestions(token);
+  calculateScore() {
+    const { questions } = this.props;
+    const { questionIndex, timerValue } = this.state;
+    const { difficulty } = questions[questionIndex];
+    const basePoint = 10;
+    const difficultyWeight = { easy: 1, medium: 2, hard: 3 };
+
+    const score = basePoint + (timerValue * difficultyWeight[difficulty]);
+
+    return score;
   }
 
   handleNextClick() {
+    const { questionIndex } = this.state;
+    const { questions, history } = this.props;
+    const lastIndex = 4;
+
+    if (questionIndex === lastIndex) {
+      history.push('/feedback');
+      return;
+    }
+
     this.setState((previous) => ({ questionIndex: previous.questionIndex + 1,
       isAnswered: false }));
-    const { questions } = this.props;
-    const { questionIndex } = this.state;
     if (questions[questionIndex].type === 'multiple') {
       document.querySelector('[data-testid=correct-answer]').classList
         .remove('correct');
@@ -84,13 +96,15 @@ class Game extends Component {
 
   renderQuestions() {
     const { questions } = this.props;
-    const { questionIndex, timerValue } = this.state;
+    const { questionIndex, timerValue, isAnswered } = this.state;
     if (questions[questionIndex].type === 'multiple') {
       return (<MultipleQuestion
         currentQuestion={ questions[questionIndex] }
         answered={ this.showNextButton }
         stopTimer={ this.stopTimer }
         timerValue={ timerValue }
+        isAnswered={ isAnswered }
+        calculateScore={ this.calculateScore }
       />);
     }
     return (<BooleanQuestion
@@ -98,6 +112,8 @@ class Game extends Component {
       answered={ this.showNextButton }
       stopTimer={ this.stopTimer }
       timerValue={ timerValue }
+      isAnswered={ isAnswered }
+      calculateScore={ this.calculateScore }
     />);
   }
 
@@ -133,18 +149,19 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 Game.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }).isRequired,
   questions: PropTypes.arrayOf(PropTypes.shape({
     correct_answer: PropTypes.string,
     incorrect_answers: PropTypes.arrayOf(PropTypes.string),
+    difficulty: PropTypes.string,
     category: PropTypes.string,
     question: PropTypes.string,
     map: PropTypes.func,
     length: PropTypes.number,
     type: PropTypes.string,
   })).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   getQuestions: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
 };
