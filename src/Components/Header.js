@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { MD5 } from 'crypto-js';
+/* import { getPlayer } from '../services/localStorage'; */
 
 class Header extends Component {
   render() {
-    const { name, score, gravatarEmail } = this.props;
+    const { name, gravatarEmail, score } = this.props;
     const url = `https://www.gravatar.com/avatar/${MD5(gravatarEmail).toString()}`;
     return (
       <div>

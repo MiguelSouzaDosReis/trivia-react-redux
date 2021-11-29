@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { fetchQuestions } from '../Redux/Actions';
 import MultipleQuestion from '../Components/MultipleQuestion';
 import BooleanQuestion from '../Components/BooleanQuestion';
-import HeaderFeedback from '../Components/HeaderFeedback';
+import Header from '../Components/Header';
 
 class Game extends Component {
   constructor() {
@@ -122,7 +122,7 @@ class Game extends Component {
     const { timerValue, isAnswered } = this.state;
     return (
       <div>
-        <HeaderFeedback />
+        <Header />
         <span><strong>{timerValue}</strong></span>
         {questions.length > 0 && this.renderQuestions() }
         <button
@@ -133,7 +133,6 @@ class Game extends Component {
         >
           Next
         </button>
-        <button onClick={ this.handleClickFeedbacks } type="button">Feddbacks</button>
       </div>
     );
   }
