@@ -32,6 +32,7 @@ export function getRanking() {
 
 export function addRanking(playerRanking = defaultPlayerRanking) {
   const ranking = getRanking();
+  console.log(playerRanking);
   let newRanking;
 
   if (ranking === null || ranking === undefined) {

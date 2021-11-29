@@ -5,6 +5,12 @@ import { MD5 } from 'crypto-js';
 /* import { getPlayer } from '../services/localStorage'; */
 
 class Header extends Component {
+  componentDidMount() {
+    const { gravatarEmail } = this.props;
+    const url = `https://www.gravatar.com/avatar/${MD5(gravatarEmail).toString()}`;
+    sessionStorage.setItem('picture', url);
+  }
+
   render() {
     const { name, gravatarEmail, score } = this.props;
     const url = `https://www.gravatar.com/avatar/${MD5(gravatarEmail).toString()}`;
