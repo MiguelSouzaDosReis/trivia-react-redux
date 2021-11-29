@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { loginAct, saveTokenAct } from '../Redux/Actions';
+import { loginAct, saveTokenAct, updateScoreAct } from '../Redux/Actions';
 import { savePlayerInfo } from '../services/localStorage';
 
 class Login extends Component {
@@ -16,6 +16,11 @@ class Login extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleClickConfig = this.handleClickConfig.bind(this);
     this.fetchToken = this.fetchToken.bind(this);
+  }
+
+  componentDidMount() {
+    const { updateScore } = this.props;
+    updateScore(0, 0);
   }
 
   handleClickConfig() {
@@ -103,11 +108,13 @@ Login.propTypes = {
   }).isRequired,
   saveToken: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired,
+  updateScore: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   saveToken: (token) => dispatch(saveTokenAct(token)),
   login: (name, email) => dispatch(loginAct(name, email)),
+  updateScore: (score, assertions) => dispatch(updateScoreAct(score, assertions)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
