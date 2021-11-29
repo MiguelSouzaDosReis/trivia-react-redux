@@ -2,24 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { MD5 } from 'crypto-js';
+/* import { getPlayer } from '../services/localStorage'; */
 
 class Header extends Component {
-  constructor() {
-    super();
-    this.feedback = this.feedback.bind(this);
-  }
-
-  feedback() {
-    const { score } = this.props;
-    const tres = 3;
-    if (score < tres) {
-      return 'Podia ser melhor...';
-    }
-    return 'Mandou bem!';
-  }
-
   render() {
-    const { name, score, gravatarEmail } = this.props;
+    const { name, gravatarEmail, score } = this.props;
     const url = `https://www.gravatar.com/avatar/${MD5(gravatarEmail).toString()}`;
     return (
       <div>
@@ -34,7 +21,6 @@ class Header extends Component {
             { name }
           </h3>
           <p data-testid="header-score">{ score }</p>
-          <p data-testid="feedback-text">{ this.feedback() }</p>
         </header>
       </div>
     );

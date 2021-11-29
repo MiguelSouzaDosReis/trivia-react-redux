@@ -2,7 +2,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import sanitizeHtml from 'sanitize-html';
+import { connect } from 'react-redux';
 import { getPlayer, savePlayerInfo } from '../services/localStorage';
+import { updateScoreAct } from '../Redux/Actions';
 
 class MultipleQuestion extends Component {
   constructor(props) {
@@ -69,7 +71,7 @@ class MultipleQuestion extends Component {
   }
 
   handleButtonClick(e) {
-    const { answered, calculateScore, stopTimer } = this.props;
+    const { answered, calculateScore, stopTimer, updateScore, assertions } = this.props;
     stopTimer();
     document.querySelector('[data-testid=correct-answer]').classList.add('correct');
     document.querySelector('[data-testid=wrong-answer-0]').classList.add('incorrect');
@@ -82,6 +84,7 @@ class MultipleQuestion extends Component {
       const questionScore = calculateScore();
 
       savePlayerInfo({ score: currentScore + questionScore });
+      updateScore(currentScore + questionScore, assertions + 1);
     }
 
     answered();
@@ -119,6 +122,14 @@ class MultipleQuestion extends Component {
   }
 }
 
+const mapStateToProp = (state) => ({
+  assertions: state.player.assertions,
+});
+
+const mapDispatchToProp = (dispatch) => ({
+  updateScore: (score, assertions) => dispatch(updateScoreAct(score, assertions)),
+});
+
 MultipleQuestion.propTypes = {
   currentQuestion: PropTypes.shape({
     correct_answer: PropTypes.string,
@@ -126,11 +137,13 @@ MultipleQuestion.propTypes = {
     category: PropTypes.string,
     question: PropTypes.string,
   }).isRequired,
+  updateScore: PropTypes.func.isRequired,
   answered: PropTypes.func.isRequired,
   calculateScore: PropTypes.func.isRequired,
   stopTimer: PropTypes.func.isRequired,
   timerValue: PropTypes.number.isRequired,
   isAnswered: PropTypes.bool.isRequired,
+  assertions: PropTypes.number.isRequired,
 };
 
-export default MultipleQuestion;
+export default connect(mapStateToProp, mapDispatchToProp)(MultipleQuestion);

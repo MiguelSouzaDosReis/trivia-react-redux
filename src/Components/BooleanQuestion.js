@@ -2,7 +2,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import sanitizeHtml from 'sanitize-html';
+import { connect } from 'react-redux';
 import { getPlayer, savePlayerInfo } from '../services/localStorage';
+import { updateScoreAct } from '../Redux/Actions';
 
 class BooleanQuestion extends Component {
   constructor(props) {
@@ -12,7 +14,7 @@ class BooleanQuestion extends Component {
   }
 
   handleButtonClick(e) {
-    const { answered, calculateScore, stopTimer } = this.props;
+    const { answered, calculateScore, stopTimer, updateScore, assertions } = this.props;
     stopTimer();
     document.querySelector('[data-testid=correct-answer]').classList.add('correct');
     document.querySelector('[data-testid=wrong-answer-0]').classList.add('incorrect');
@@ -23,6 +25,7 @@ class BooleanQuestion extends Component {
       const questionScore = calculateScore();
 
       savePlayerInfo({ score: currentScore + questionScore });
+      updateScore(currentScore + questionScore, assertions + 1);
     }
 
     answered();
@@ -75,6 +78,13 @@ class BooleanQuestion extends Component {
     );
   }
 }
+const mapStateToProp = (state) => ({
+  assertions: state.player.assertions,
+});
+
+const mapDispatchToProp = (dispatch) => ({
+  updateScore: (score, assertions) => dispatch(updateScoreAct(score, assertions)),
+});
 
 BooleanQuestion.propTypes = {
   currentQuestion: PropTypes.shape({
@@ -83,11 +93,13 @@ BooleanQuestion.propTypes = {
     correct_answer: PropTypes.string,
     difficulty: PropTypes.string,
   }).isRequired,
+  updateScore: PropTypes.func.isRequired,
   answered: PropTypes.func.isRequired,
   stopTimer: PropTypes.func.isRequired,
   calculateScore: PropTypes.func.isRequired,
   timerValue: PropTypes.number.isRequired,
   isAnswered: PropTypes.bool.isRequired,
+  assertions: PropTypes.number.isRequired,
 };
 
-export default BooleanQuestion;
+export default connect(mapStateToProp, mapDispatchToProp)(BooleanQuestion);

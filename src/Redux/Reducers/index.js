@@ -1,4 +1,4 @@
-import { GET_QUESTIONS, LOGIN, SAVE_TOKEN } from '../Actions';
+import { GET_QUESTIONS, LOGIN, SAVE_TOKEN, UPDATE_SCORE } from '../Actions';
 
 const INITIAL_STATE = {
   player: {
@@ -32,6 +32,15 @@ const reducer = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       questions: [...state.questions, ...action.payload.questions.results],
+    };
+  case UPDATE_SCORE:
+    return {
+      ...state,
+      player: {
+        ...state.player,
+        score: action.payload.score,
+        assertions: action.payload.assertions,
+      },
     };
   default:
     return state;
