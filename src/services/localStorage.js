@@ -4,6 +4,8 @@ export function getPlayer() {
   return JSON.parse(localStorage.getItem('state'));
 }
 
+// info = { name, score, assertions, gravatarEmail }
+
 export function savePlayerInfo(info) {
   const state = getPlayer();
   let newState;

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { loginAct, saveTokenAct } from '../Redux/Actions';
+import { savePlayerInfo } from '../services/localStorage';
 
 class Login extends Component {
   constructor() {
@@ -38,6 +39,9 @@ class Login extends Component {
     e.preventDefault(e);
     this.fetchToken();
     login(name, email);
+
+    savePlayerInfo({ name, gravatarEmail: email, score: 0, assertions: 0 });
+
     history.push('/game');
   }
 
@@ -75,7 +79,7 @@ class Login extends Component {
         <button
           type="submit"
           data-testid="btn-play"
-          onClick={ (e) => this.handleClick(e) }
+          onClick={ this.handleClick }
           disabled={ name === '' || email === '' }
         >
           Jogar
