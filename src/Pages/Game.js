@@ -22,6 +22,7 @@ class Game extends Component {
     this.showNextButton = this.showNextButton.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
+    this.handleClickFeedbacks = this.handleClickFeedbacks.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +77,11 @@ class Game extends Component {
     clearInterval(this.Interval);
   }
 
+  handleClickFeedbacks() {
+    const { history } = this.props;
+    history.push('/feedbacks');
+  }
+
   renderQuestions() {
     const { questions } = this.props;
     const { questionIndex, timerValue } = this.state;
@@ -111,6 +117,7 @@ class Game extends Component {
         >
           Next
         </button>
+        <button onClick={ this.handleClickFeedbacks } type="button">Feddbacks</button>
       </div>
     );
   }
@@ -126,6 +133,9 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 Game.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   questions: PropTypes.arrayOf(PropTypes.shape({
     correct_answer: PropTypes.string,
     incorrect_answers: PropTypes.arrayOf(PropTypes.string),

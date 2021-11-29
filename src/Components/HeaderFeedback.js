@@ -34,7 +34,7 @@ class Header extends Component {
             { name }
           </h3>
           <p data-testid="header-score">{ score }</p>
-          <p>{ this.feedback() }</p>
+          <p data-testid="feedback-text">{ this.feedback() }</p>
         </header>
       </div>
     );
