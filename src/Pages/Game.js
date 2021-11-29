@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Header from '../Components/Header';
 import { fetchQuestions } from '../Redux/Actions';
 import MultipleQuestion from '../Components/MultipleQuestion';
 import BooleanQuestion from '../Components/BooleanQuestion';
+import Header from '../Components/Header';
 
 class Game extends Component {
   constructor() {
@@ -22,6 +22,7 @@ class Game extends Component {
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
     this.calculateScore = this.calculateScore.bind(this);
+    this.handleClickFeedbacks = this.handleClickFeedbacks.bind(this);
   }
 
   componentDidMount() {
@@ -86,6 +87,11 @@ class Game extends Component {
 
   stopTimer() {
     clearInterval(this.Interval);
+  }
+
+  handleClickFeedbacks() {
+    const { history } = this.props;
+    history.push('/feedbacks');
   }
 
   renderQuestions() {
