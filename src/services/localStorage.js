@@ -41,5 +41,8 @@ export function addRanking(playerRanking = defaultPlayerRanking) {
     newRanking = [...ranking, playerRanking];
   }
 
+  // Organiza em ordem decrescente
+  newRanking.sort(({ score: a }, { score: b }) => b - a);
+
   localStorage.setItem('ranking', JSON.stringify(newRanking));
 }
