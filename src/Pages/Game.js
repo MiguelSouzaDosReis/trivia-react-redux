@@ -5,6 +5,7 @@ import { fetchQuestions } from '../Redux/Actions';
 import MultipleQuestion from '../Components/MultipleQuestion';
 import BooleanQuestion from '../Components/BooleanQuestion';
 import Header from '../Components/Header';
+import { addRanking } from '../services/localStorage';
 
 class Game extends Component {
   constructor() {
@@ -23,6 +24,7 @@ class Game extends Component {
     this.stopTimer = this.stopTimer.bind(this);
     this.calculateScore = this.calculateScore.bind(this);
     this.handleClickFeedbacks = this.handleClickFeedbacks.bind(this);
+    this.changeButtonColors = this.changeButtonColors.bind(this);
   }
 
   componentDidMount() {
@@ -48,12 +50,25 @@ class Game extends Component {
     return score;
   }
 
+  changeButtonColors() {
+    document.querySelector('[data-testid=correct-answer]').classList
+      .remove('correct');
+    document.querySelector('[data-testid=wrong-answer-0]').classList
+      .remove('incorrect');
+    document.querySelector('[data-testid=wrong-answer-1]').classList
+      .remove('incorrect');
+    document.querySelector('[data-testid=wrong-answer-2]').classList
+      .remove('incorrect');
+  }
+
   handleNextClick() {
     const { questionIndex } = this.state;
-    const { questions, history } = this.props;
+    const { questions, history, name, score } = this.props;
     const lastIndex = 4;
-
+    console.log(questionIndex);
     if (questionIndex === lastIndex) {
+      console.log('preaddranking');
+      addRanking({ name, score, picture: sessionStorage.picture });
       history.push('/feedback');
       return;
     }
@@ -61,14 +76,7 @@ class Game extends Component {
     this.setState((previous) => ({ questionIndex: previous.questionIndex + 1,
       isAnswered: false }));
     if (questions[questionIndex].type === 'multiple') {
-      document.querySelector('[data-testid=correct-answer]').classList
-        .remove('correct');
-      document.querySelector('[data-testid=wrong-answer-0]').classList
-        .remove('incorrect');
-      document.querySelector('[data-testid=wrong-answer-1]').classList
-        .remove('incorrect');
-      document.querySelector('[data-testid=wrong-answer-2]').classList
-        .remove('incorrect');
+      this.changeButtonColors();
     }
     document.querySelector('[data-testid=correct-answer]').classList.remove('correct');
     document.querySelector('[data-testid=wrong-answer-0]').classList.remove('incorrect');
@@ -141,6 +149,8 @@ class Game extends Component {
 const mapStateToProps = (state) => ({
   questions: state.questions,
   token: state.token,
+  name: state.player.name,
+  score: state.player.score,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -163,6 +173,8 @@ Game.propTypes = {
   }).isRequired,
   getQuestions: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

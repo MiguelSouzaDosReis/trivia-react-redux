@@ -81,9 +81,11 @@ class MultipleQuestion extends Component {
     const isCorrect = e.target.className === 'correct';
     if (isCorrect) {
       const currentScore = getPlayer().player.score;
+      const currentAssertions = getPlayer().player.assertions;
       const questionScore = calculateScore();
 
-      savePlayerInfo({ score: currentScore + questionScore });
+      savePlayerInfo({ score: currentScore + questionScore,
+        assertions: currentAssertions + 1 });
       updateScore(currentScore + questionScore, assertions + 1);
     }
 

@@ -14,10 +14,27 @@ class Feedback extends Component {
   }
 
   render() {
+    const { assertions, score, history } = this.props;
     return (
       <div>
         <Header />
         <p data-testid="feedback-text">{ this.feedback() }</p>
+        <p data-testid="feedback-total-score">{ score }</p>
+        <p data-testid="feedback-total-question">{ assertions }</p>
+        <button
+          type="button"
+          data-testid="btn-play-again"
+          onClick={ () => history.push('/') }
+        >
+          Jogar novamente
+        </button>
+        <button
+          type="button"
+          data-testid="btn-ranking"
+          onClick={ () => history.push('/ranking') }
+        >
+          Ver Ranking
+        </button>
       </div>
     );
   }
@@ -25,10 +42,16 @@ class Feedback extends Component {
 
 const mapStateToProp = (state) => ({
   assertions: state.player.assertions,
+  score: state.player.score,
 
 });
+
 Feedback.propTypes = {
   assertions: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 export default connect(mapStateToProp)(Feedback);
